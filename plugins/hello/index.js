@@ -6,27 +6,27 @@ var RoboHydraHeadProxy  	= require("robohydra").heads.RoboHydraHeadProxy; // pro
 exports.getBodyParts = function(conf) {
     return {
         heads: [
-		//static head : http://171.71.50.214:4000/foo
+		//static response : http://171.71.50.214:4000/hello
 		new RoboHydraHeadStatic({
 			path: '/hello',
 			content: {
-			    "env_name": 'AAAS_HOME',
-			    "env_value": process.env.AAAS_HOME
+			    "env_name": 'USER',
+			    "env_value": process.env.USER
  		   	}   
 		    }),
-		// head created by code : http://171.71.50.214:4000/slow?millis=500
+		// dynamic response : http://171.71.50.214:4000/slow?millis=500
 		new RoboHydraHead ({
 			path: '/slow',
-			handler: function(req,res) {
+			handler: function(req,res) {		
 					setTimeout(function() {
 					res.send("slow response with " + req.queryParams.millis + " millis delay" );
 				},req.queryParams.millis || 1000 );
 			}
 		}),
-		// static file system : http://171.71.50.214:4000/assets/test1.txt
+		// static response from file system : http://171.71.50.214:4000/assets/test1.txt
 		new RoboHydraHeadFilesystem ({
 			mountPath:  'assets',
-			documentRoot: 'robohydra/plugins/hello/fake-assets'
+			documentRoot: 'plugins/hello/fake-assets'
 		}),
 		// proxy to different url : http://171.71.50.214:4000/goto
 		new RoboHydraHeadProxy ({
